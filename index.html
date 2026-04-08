@@ -13,16 +13,16 @@
             font-family: 'Inter', sans-serif; 
             background: linear-gradient(180deg, #81D8D0 0%, #4db6ac 25%, #26a69a 50%, #0f172a 100%);
             background-attachment: fixed;
+            min-height: 100vh;
             color: #1e293b;
             overflow-x: hidden;
-            /* Предотвращаем скролл при игре на мобилках */
             touch-action: manipulation;
         }
 
         .gradient-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 80%);
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 80%);
             pointer-events: none;
             z-index: 1;
         }
@@ -33,26 +33,27 @@
             color: rgba(255, 255, 255, 0.2);
             pointer-events: none;
             z-index: 2;
+            filter: blur(1px);
             animation: fall linear infinite;
         }
 
         @keyframes fall {
             0% { transform: translateY(0) rotate(0deg) scale(var(--scale)); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
+            15% { opacity: var(--max-opacity); }
+            85% { opacity: var(--max-opacity); }
             100% { transform: translateY(110vh) rotate(var(--rotation)) scale(var(--scale)); opacity: 0; }
         }
 
-        /* Адаптивный стаканчик в игре */
         .game-cup {
             position: absolute;
-            width: 50px; /* Уменьшен для мобильных */
+            width: 50px;
             height: 65px;
             background-image: url('coffe.png');
             background-size: contain;
             background-repeat: no-repeat;
             pointer-events: none;
             z-index: 30;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
         }
 
         @media (min-width: 768px) {
@@ -61,8 +62,10 @@
 
         #game-over-screen {
             display: none;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.9);
             border-radius: 1.5rem;
+            transition: all 0.5s ease;
         }
 
         section { position: relative; z-index: 10; }
@@ -74,17 +77,16 @@
             background-image: url('background-game.png');
             background-size: cover;
             background-position: center;
-            border-radius: 1.5rem;
+            border-radius: 2rem;
             overflow: hidden;
             touch-action: none;
-            cursor: crosshair;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         @media (min-width: 768px) {
             #game-screen { height: 600px; border-radius: 3rem; }
         }
 
-        /* Ловец теперь более гибкий */
         #catcher {
             position: absolute;
             width: 120px;
@@ -92,11 +94,21 @@
             bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            transition: left 0.1s ease-out;
+            transition: left 0.15s cubic-bezier(0.23, 1, 0.32, 1);
+            will-change: left;
         }
 
         @media (min-width: 768px) {
             #catcher { width: 180px; height: 240px; }
+        }
+
+        .fade-up {
+            animation: fadeUp 1s ease-out forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -104,64 +116,64 @@
 
     <div class="gradient-overlay"></div>
 
-    <section class="min-h-screen flex flex-col items-center justify-center p-4 md:p-6">
+    <section class="min-h-screen flex flex-col items-center justify-center p-4 md:p-6 fade-up">
         <div class="absolute top-4 left-4 md:top-10 md:left-10 z-50">
             <img src="logo.png" alt="Логотип" class="h-12 md:h-24 w-auto object-contain drop-shadow-2xl">
         </div>
 
-        <div class="max-w-4xl w-full mt-12">
-            <header class="text-center mb-6 md:mb-10">
-                <span class="text-teal-900 font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] md:text-xs">Эко-инициатива ЮУТУ & УРК</span>
-                <h1 class="text-3xl md:text-7xl font-black mt-3 text-slate-900 leading-tight">
+        <div class="max-w-4xl w-full mt-12 text-center">
+            <header class="mb-6 md:mb-10">
+                <span class="text-teal-900 font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">Эко-инициатива ЮУТУ & УРК</span>
+                <h1 class="text-4xl md:text-8xl font-black mt-4 text-slate-900 leading-tight">
                     Вторая жизнь <br>
-                    <span class="text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.2)]">стаканчиков</span>
+                    <span class="text-white drop-shadow-[0_8px_20px_rgba(0,0,0,0.3)]">стаканчиков</span>
                 </h1>
             </header>
 
-            <div class="mx-auto max-w-[280px] md:max-w-[350px] shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-4 border-white/30 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden transform hover:scale-[1.01] transition-transform">
+            <div class="mx-auto max-w-[280px] md:max-w-[350px] shadow-[0_30px_60px_rgba(0,0,0,0.4)] border-8 border-white/20 rounded-[2.5rem] overflow-hidden transform hover:rotate-2 transition-all duration-500">
                 <video class="w-full h-auto block" src="video.mp4" controls autoplay muted loop playsinline></video>
             </div>
 
-            <p class="mt-8 text-center text-teal-950 italic text-lg md:text-xl font-medium px-4">
-                «Чистая совесть вкуснее чистого кофе. <br class="md:hidden"> Сдай стакан — сохрани планету».
+            <p class="mt-10 text-teal-950 italic text-lg md:text-2xl font-medium px-4 whitespace-nowrap">
+                «Чистая совесть вкуснее чистого кофе. Сдай стакан — сохрани планету».
             </p>
         </div>
     </section>
 
     <section class="py-16 md:py-32 px-6">
         <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div class="text-white">
-                <h2 class="text-3xl md:text-4xl font-black mb-6 md:mb-8 border-l-4 border-white pl-6">Почему это важно?</h2>
-                <ul class="space-y-4 md:space-y-6 text-lg md:text-xl font-light">
-                    <li class="flex items-center group">
-                        <span class="bg-white/20 w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full mr-4">✕</span>
+            <div class="text-white fade-up">
+                <h2 class="text-4xl md:text-5xl font-black mb-8 border-l-8 border-white pl-6">Почему это важно?</h2>
+                <ul class="space-y-6 text-xl md:text-2xl font-light">
+                    <li class="flex items-center group transition-transform hover:translate-x-2">
+                        <span class="bg-red-500/20 w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full mr-4 border border-red-500/50">✕</span>
                         <span>Стаканчики <b>не разлагаются</b> годами</span>
                     </li>
-                    <li class="flex items-center group">
-                        <span class="bg-white/20 w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full mr-4">✕</span>
+                    <li class="flex items-center group transition-transform hover:translate-x-2">
+                        <span class="bg-red-500/20 w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full mr-4 border border-red-500/50">✕</span>
                         <span>Пластик вредит <b>экосистеме</b></span>
                     </li>
-                    <li class="flex items-center group">
-                        <span class="bg-teal-400/40 w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full mr-4 border border-white/50">✓</span>
+                    <li class="flex items-center group transition-transform hover:translate-x-2">
+                        <span class="bg-teal-400/40 w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full mr-4 border border-white/50">✓</span>
                         <span>Мы дарим им <b>новый цикл</b></span>
                     </li>
                 </ul>
             </div>
             
-            <div class="bg-white/10 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] backdrop-blur-xl border border-white/20 shadow-2xl">
-                <h3 class="text-xl font-bold mb-6 text-white text-center">Выбери свой размер:</h3>
-                <div class="flex justify-between items-end gap-2 md:gap-4">
-                    <div class="flex-1 bg-white/90 py-4 md:p-6 rounded-xl md:rounded-2xl text-center shadow-lg">
-                        <span class="block font-black text-xl md:text-3xl text-slate-800">S</span>
-                        <span class="text-[10px] md:text-sm text-slate-500 font-bold uppercase">250мл</span>
+            <div class="bg-white/10 p-8 md:p-12 rounded-[3rem] backdrop-blur-2xl border border-white/30 shadow-2xl fade-up" style="animation-delay: 0.2s">
+                <h3 class="text-2xl font-bold mb-8 text-white text-center uppercase tracking-widest">Размеры переработки:</h3>
+                <div class="flex justify-between items-end gap-3 md:gap-6">
+                    <div class="flex-1 bg-white/95 p-4 md:p-8 rounded-2xl text-center shadow-xl hover:scale-105 transition-transform">
+                        <span class="block font-black text-2xl md:text-4xl text-slate-800">S</span>
+                        <span class="text-xs md:text-sm text-slate-500 font-bold uppercase">250мл</span>
                     </div>
-                    <div class="flex-1 bg-white/90 py-4 md:p-6 rounded-xl md:rounded-2xl text-center shadow-lg">
-                        <span class="block font-black text-2xl md:text-4xl text-teal-800">M</span>
-                        <span class="text-[10px] md:text-sm text-slate-500 font-bold uppercase">350мл</span>
+                    <div class="flex-1 bg-teal-500 p-5 md:p-10 rounded-2xl text-center shadow-2xl hover:scale-110 transition-transform">
+                        <span class="block font-black text-3xl md:text-5xl text-white">M</span>
+                        <span class="text-xs md:text-sm text-white/80 font-bold uppercase">350мл</span>
                     </div>
-                    <div class="flex-1 bg-white/90 py-4 md:p-6 rounded-xl md:rounded-2xl text-center shadow-lg">
-                        <span class="block font-black text-xl md:text-3xl text-slate-800">L</span>
-                        <span class="text-[10px] md:text-sm text-slate-500 font-bold uppercase">450мл</span>
+                    <div class="flex-1 bg-white/95 p-4 md:p-8 rounded-2xl text-center shadow-xl hover:scale-105 transition-transform">
+                        <span class="block font-black text-2xl md:text-4xl text-slate-800">L</span>
+                        <span class="text-xs md:text-sm text-slate-500 font-bold uppercase">450мл</span>
                     </div>
                 </div>
             </div>
@@ -170,52 +182,53 @@
 
     <section class="py-10 md:py-20 px-4 md:px-6">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-2xl md:text-3xl font-black text-white text-center mb-6 md:mb-10 uppercase tracking-widest">Мини-игра: Эко-сборщик</h2>
+            <h2 class="text-3xl md:text-4xl font-black text-white text-center mb-10 uppercase tracking-[0.2em] drop-shadow-lg">Мини-игра: Эко-сборщик</h2>
 
             <div id="game-screen">
-                <div id="game-score" class="absolute top-5 right-5 text-white text-6xl md:text-8xl font-black opacity-20 select-none">0</div>
+                <div id="game-score" class="absolute top-5 right-10 text-white text-7xl md:text-9xl font-black opacity-10 select-none">0</div>
                 
-                <div id="game-over-screen" class="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-slate-900/95 text-white p-6 text-center">
-                    <h2 class="text-4xl md:text-6xl font-black mb-2 text-red-500 uppercase">Потрачено!</h2>
-                    <p class="text-lg mb-6 opacity-70 italic">Стакан пролетел мимо...</p>
-                    <div class="text-2xl md:text-4xl font-bold mb-8">Собрано: <span id="final-score" class="text-teal-400">0</span> шт.</div>
-                    <button onclick="startGame()" class="bg-teal-500 text-white px-8 py-4 md:px-12 md:py-5 rounded-full font-black text-lg md:text-xl hover:bg-white hover:text-teal-600 transition-all shadow-xl active:scale-95">
-                        ИГРАТЬ ЕЩЕ РАЗ
+                <div id="game-over-screen" class="absolute inset-0 z-[100] flex flex-col items-center justify-center p-6 text-center">
+                    <h2 class="text-5xl md:text-7xl font-black mb-4 text-red-500 uppercase tracking-tighter">ПОТРАЧЕНО!</h2>
+                    <p class="text-xl mb-8 text-white/80 italic">Один стакан загрязнил океан...</p>
+                    <div class="text-3xl md:text-5xl font-bold mb-10 text-white">Результат: <span id="final-score" class="text-teal-400">0</span></div>
+                    <button onclick="startGame()" class="bg-teal-500 text-white px-10 py-5 md:px-16 md:py-6 rounded-full font-black text-xl md:text-2xl hover:bg-white hover:text-teal-600 transition-all shadow-[0_0_30px_rgba(20,184,166,0.5)] active:scale-95">
+                        ПОПРОБОВАТЬ СНОВА
                     </button>
                 </div>
 
                 <div id="catcher" class="pointer-events-none">
-                    <img src="man.png" alt="Ловец" class="w-full h-full object-contain">
+                    <img src="man.png" alt="Ловец" class="w-full h-full object-contain filter drop-shadow-2xl">
                 </div>
             </div>
-            <p class="text-white/50 text-center mt-4 text-sm md:hidden">Управляй, водя пальцем по экрану</p>
         </div>
     </section>
 
     <section class="py-20 md:py-40 px-6 text-white text-center">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-black mb-6 leading-tight">Готов начать?</h2>
-            <p class="text-[#81D8D0] text-lg md:text-xl mb-12">Наши контейнеры уже ждут тебя в ЮУТУ и УРК.</p>
+        <div class="max-w-3xl mx-auto fade-up">
+            <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight">Твой ход!</h2>
+            <p class="text-teal-200 text-xl md:text-2xl mb-12 opacity-90">Контейнеры для сбора уже установлены в холлах ЮУТУ и УРК.</p>
             
-            <div class="inline-block relative group w-full md:w-auto">
-                <div class="absolute -inset-1 bg-gradient-to-r from-teal-400 to-blue-500 rounded-2xl blur opacity-25"></div>
-                <div class="relative border border-white/20 bg-slate-900/50 rounded-2xl p-6 md:p-10 backdrop-blur-sm">
-                    <p class="text-lg md:text-2xl font-light italic leading-relaxed">
-                        «Слей остатки — <span class="text-teal-400 font-bold">Опусти стакан</span> — Сделай мир чище»
+            <div class="inline-block relative group">
+                <div class="absolute -inset-2 bg-gradient-to-r from-teal-400 to-emerald-500 rounded-3xl blur-xl opacity-40 group-hover:opacity-70 transition duration-1000"></div>
+                <div class="relative border border-white/30 bg-slate-900/80 rounded-3xl p-8 md:p-14 backdrop-blur-xl">
+                    <p class="text-xl md:text-3xl font-light italic leading-relaxed">
+                        «Слей остатки — <span class="text-teal-400 font-black not-italic uppercase tracking-tighter">Опусти стакан</span> — Спаси планету»
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-8 text-center text-slate-500 text-xs bg-slate-950 px-4">
-        <p>&copy; 2026 Проект «Вторая жизнь стаканчиков». С заботой о будущем.</p>
+    <footer class="py-12 text-center text-slate-500 text-sm bg-slate-950 px-4">
+        <div class="max-w-4xl mx-auto border-t border-white/5 pt-8">
+            <p class="font-bold text-slate-400 mb-2">© 2026 Эко-проект «Вторая жизнь»</p>
+            <p>Южно-Уральский Технологический Университет & Уральский Региональный Колледж</p>
+        </div>
     </footer>
 
     <script>
-        // Фон с падающими стаканами
         function createFallingCups() {
-            const numCups = window.innerWidth < 768 ? 8 : 15; 
+            const numCups = window.innerWidth < 768 ? 10 : 20; 
             const container = document.body;
             const cupSVG = `<svg width="24" height="32" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2H21L18 30H6L3 2Z" fill="currentColor" fill-opacity="0.1"/><path d="M2 6H22" stroke-width="2"/></svg>`;
 
@@ -224,15 +237,15 @@
                 cup.className = 'falling-cup';
                 cup.innerHTML = cupSVG;
                 cup.style.left = `${Math.random() * 100}vw`;
-                cup.style.animationDuration = `${8 + Math.random() * 12}s`;
+                cup.style.animationDuration = `${10 + Math.random() * 15}s`;
                 cup.style.animationDelay = `${-(Math.random() * 20)}s`;
-                cup.style.setProperty('--scale', 0.5 + Math.random());
-                cup.style.setProperty('--rotation', `${(Math.random() > 0.5 ? 1 : -1) * 720}deg`);
+                cup.style.setProperty('--scale', 0.4 + Math.random() * 0.8);
+                cup.style.setProperty('--rotation', `${(Math.random() > 0.5 ? 1 : -1) * 1080}deg`);
+                cup.style.setProperty('--max-opacity', 0.1 + Math.random() * 0.3);
                 container.appendChild(cup);
             }
         }
 
-        // Логика игры
         const gameScreen = document.getElementById('game-screen');
         const catcher = document.getElementById('catcher');
         const scoreBoard = document.getElementById('game-score');
@@ -250,7 +263,6 @@
             let x = clientX - rect.left;
             
             const halfWidth = catcher.offsetWidth / 2;
-            // Ограничиваем движение рамками экрана
             if (x < halfWidth) x = halfWidth;
             if (x > rect.width - halfWidth) x = rect.width - halfWidth;
             
@@ -269,17 +281,18 @@
             scoreBoard.innerText = score;
             isPlaying = true;
             gameOverScreen.style.display = 'none';
+            scoreBoard.style.opacity = '0.1';
             
             if (cupSpawnInterval) clearInterval(cupSpawnInterval);
             
             cupSpawnInterval = setInterval(() => {
                 if (isPlaying) {
-                    let count = score > 20 ? 2 : 1;
+                    let count = score > 15 ? 2 : 1;
                     for (let i = 0; i < count; i++) {
-                        setTimeout(() => isPlaying && createCup(), i * 400);
+                        setTimeout(() => isPlaying && createCup(), i * 500);
                     }
                 }
-            }, 1200);
+            }, 1000);
         }
 
         function createCup() {
@@ -289,12 +302,12 @@
             const startX = Math.random() * (gameScreen.offsetWidth - cupWidth);
             
             cup.style.left = startX + 'px';
-            cup.style.top = '-70px';
+            cup.style.top = '-100px';
             gameScreen.appendChild(cup);
 
-            let posY = -70;
-            let speed = (window.innerWidth < 768 ? 2.5 : 3.5) + (score * 0.1);
-            if (speed > 10) speed = 10;
+            let posY = -100;
+            let speed = (window.innerWidth < 768 ? 3 : 4.5) + (score * 0.15);
+            if (speed > 12) speed = 12;
 
             function fall() {
                 if (!isPlaying) { cup.remove(); return; }
@@ -304,15 +317,16 @@
                 const cupRect = cup.getBoundingClientRect();
                 const catcherRect = catcher.getBoundingClientRect();
 
-                // Проверка столкновения
                 if (
-                    cupRect.bottom >= catcherRect.top + 20 &&
-                    cupRect.right >= catcherRect.left + 10 &&
-                    cupRect.left <= catcherRect.right - 10 &&
-                    cupRect.top <= catcherRect.top + 60
+                    cupRect.bottom >= catcherRect.top + 30 &&
+                    cupRect.right >= catcherRect.left + 20 &&
+                    cupRect.left <= catcherRect.right - 20 &&
+                    cupRect.top <= catcherRect.top + 80
                 ) {
                     score++;
                     scoreBoard.innerText = score;
+                    scoreBoard.style.opacity = '0.3';
+                    setTimeout(() => scoreBoard.style.opacity = '0.1', 100);
                     cup.remove();
                     return;
                 }
