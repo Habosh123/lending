@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вторая жизнь стаканчиков | ЮУТУ & УРК</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(180deg, #81D8D0 0%, #4db6ac 25%, #26a69a 50%, #0f172a 100%);
+            background-attachment: fixed;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        .gradient-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 80%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 1.5rem; }
+
+        .falling-cup {
+            position: fixed;
+            top: -10vh;
+            color: rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+            z-index: 2;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg) scale(var(--scale)); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(var(--rotation)) scale(var(--scale)); opacity: 0; }
+        }
+
+        /* Обновленный стиль стаканчика в игре */
+        .game-cup {
+            position: absolute;
+            width: 70px;
+            height: 90px;
+            background-image: url('coffe.png'); /* Твоя текстура */
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            user-select: none;
+            z-index: 30;
+        }
+
+        #game-over-screen {
+            display: none;
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+        }
+
+        section { position: relative; z-index: 10; }
+
+        /* Стиль для нового ловца-персонажа */
+        #catcher img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ОБНОВЛЕННЫЙ ФОН ИГРЫ */
+        #game-screen {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background-image: url('background-game.png'); /* Файл с коридором */
+            background-size: cover;
+            background-position: center;
+            border-radius: 3rem;
+            border: 4px border-white/10;
+            shadow: [inset_0_0_50px_rgba(0,0,0,0.5)];
+            overflow: hidden;
+            cursor: none;
+            touch-none: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gradient-overlay"></div>
+
+    <section class="min-h-screen flex flex-col items-center justify-center p-6">
+        <a href="#" class="absolute top-6 left-6 md:top-10 md:left-10 z-50 transform hover:scale-105 transition-all">
+            <img src="logo.png" alt="Логотип" class="h-20 md:h-28 w-auto object-contain drop-shadow-2xl">
+        </a>
+
+        <div class="max-w-4xl w-full mt-20 md:mt-0">
+            <header class="text-center mb-10">
+                <span class="text-teal-900 font-bold tracking-[0.3em] uppercase text-xs">Эко-инициатива ЮУТУ & УРК</span>
+                <h1 class="text-4xl md:text-7xl font-black mt-3 text-slate-900 leading-tight">
+                    Вторая жизнь <br>
+                    <span class="text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.2)]">стаканчиков</span>
+                </h1>
+            </header>
+
+            <div class="mx-auto max-w-[350px] shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-4 border-white/30 rounded-[2.5rem] overflow-hidden transform hover:scale-[1.01] transition-transform">
+    <video 
+        class="w-full h-auto block" 
+        src="video.mp4" 
+        controls 
+        autoplay 
+        muted 
+        loop>
+        Ваш браузер не поддерживает видео.
+    </video>
+</div>
+
+            <p class="mt-10 text-center text-teal-950 italic text-xl font-medium mx-auto whitespace-nowrap">
+                «Чистая совесть вкуснее чистого кофе. Сдай стакан — сохрани планету».
+            </p>
+        </div>
+    </section>
+
+    <section class="py-32 px-6">
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <div class="text-white">
+                <h2 class="text-4xl font-black mb-8 border-l-4 border-white pl-6">Почему это важно?</h2>
+                <ul class="space-y-6 text-xl font-light">
+                    <li class="flex items-center group">
+                        <span class="bg-white/20 w-8 h-8 flex items-center justify-center rounded-full mr-4 group-hover:bg-white/40 transition-colors">✕</span>
+                        <span>Стаканчики <b>не разлагаются</b> годами</span>
+                    </li>
+                    <li class="flex items-center group">
+                        <span class="bg-white/20 w-8 h-8 flex items-center justify-center rounded-full mr-4 group-hover:bg-white/40 transition-colors">✕</span>
+                        <span>Пластик попадает в <b>мировую экосистему</b></span>
+                    </li>
+                    <li class="flex items-center group">
+                        <span class="bg-teal-400/40 w-8 h-8 flex items-center justify-center rounded-full mr-4 border border-white/50">✓</span>
+                        <span>Мы дарим им <b>новый цикл</b> использования</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-white/10 p-10 rounded-[3rem] backdrop-blur-xl border border-white/20 shadow-2xl">
+                <h3 class="text-2xl font-bold mb-8 text-white text-center">Просто выбери свой размер:</h3>
+                <div class="flex justify-between items-end gap-4">
+                    <div class="flex-1 bg-white/90 p-6 rounded-2xl text-center shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="block font-black text-3xl text-slate-800">S</span>
+                        <span class="text-sm text-slate-500 font-bold uppercase">250мл</span>
+                    </div>
+                    <div class="flex-1 bg-white/90 p-6 rounded-2xl text-center shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="block font-black text-3xl text-teal-800">M</span>
+                        <span class="text-sm text-slate-500 font-bold uppercase">350мл</span>
+                    </div>
+                    <div class="flex-1 bg-white/90 p-6 rounded-2xl text-center shadow-lg transform hover:-translate-y-2 transition-transform">
+                        <span class="block font-black text-3xl text-slate-800">L</span>
+                        <span class="text-sm text-slate-500 font-bold uppercase">450мл</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-black text-white text-center mb-10 uppercase tracking-widest">Мини-игра: Эко-сборщик</h2>
+
+            <div id="game-screen">
+                <div id="game-score" class="absolute top-10 right-10 text-white text-8xl font-black opacity-10 select-none">0</div>
+                
+                <div id="game-over-screen" class="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-slate-900/90 text-white p-10 text-center">
+                    <h2 class="text-6xl font-black mb-4 text-red-500">ПОТРАЧЕНО!</h2>
+                    <p class="text-xl mb-8 opacity-70 italic">Стакан не попал в переработку...</p>
+                    <div class="text-4xl font-bold mb-10">Ваш вклад: <span id="final-score" class="text-teal-400">0</span> шт.</div>
+                    <button onclick="startGame()" class="bg-teal-500 text-white px-12 py-5 rounded-full font-black text-xl hover:bg-white hover:text-teal-600 transition-all transform hover:scale-110 shadow-xl">
+                        ИГРАТЬ ЕЩЕ РАЗ
+                    </button>
+                </div>
+
+                <div id="catcher" class="absolute w-60 h-80 z-40 pointer-events-none" style="bottom: 10px; left: 50%; transform: translateX(-50%);">
+                    <img src="man.png" alt="Ловец" class="w-full h-full object-contain">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-40 px-6 text-white text-center">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-5xl font-black mb-6">Готов начать?</h2>
+            <p class="text-[#81D8D0] text-xl mb-16 font-medium">Наши контейнеры уже ждут тебя в коридорах ЮУТУ и УРК.</p>
+            
+            <div class="inline-block relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-teal-400 to-blue-500 rounded-3xl blur opacity-25 group-hover:opacity-100 transition duration-1000"></div>
+                <div class="relative border border-white/20 bg-slate-900/50 rounded-3xl p-10 md:p-12 backdrop-blur-sm">
+                    <p class="text-2xl md:text-3xl font-light italic leading-relaxed tracking-wide whitespace-nowrap">
+                        «Слей остатки — <span class="text-teal-400 font-bold">Опусти стакан</span> — Сделай мир чище»
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center text-slate-500 text-sm border-t border-white/5 bg-slate-950">
+        <p>&copy; 2026 Проект «Вторая жизнь стаканчиков». С заботой о будущем.</p>
+    </footer>
+
+    <script>
+        function createFallingCups() {
+            const numCups = 15; 
+            const container = document.body;
+            const cupSVG = `<svg width="24" height="32" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2H21L18 30H6L3 2Z" fill="currentColor" fill-opacity="0.1"/><path d="M2 6H22" stroke-width="2"/></svg>`;
+
+            for (let i = 0; i < numCups; i++) {
+                let cup = document.createElement('div');
+                cup.className = 'falling-cup';
+                cup.innerHTML = cupSVG;
+                let leftPos = Math.random() * 100;
+                let animDuration = 8 + Math.random() * 12;
+                let scale = 0.5 + Math.random() * 1;
+                cup.style.left = `${leftPos}vw`;
+                cup.style.animationDuration = `${animDuration}s`;
+                cup.style.animationDelay = `${-(Math.random() * 20)}s`;
+                cup.style.setProperty('--scale', scale);
+                cup.style.setProperty('--rotation', `${(Math.random() > 0.5 ? 1 : -1) * 720}deg`);
+                container.appendChild(cup);
+            }
+        }
+
+        const gameScreen = document.getElementById('game-screen');
+        const catcher = document.getElementById('catcher');
+        const scoreBoard = document.getElementById('game-score');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const finalScoreLabel = document.getElementById('final-score');
+        
+        let score = 0;
+        let isPlaying = false;
+        let cupSpawnInterval;
+
+        const handleMove = (e) => {
+            if (!isPlaying) return;
+            const rect = gameScreen.getBoundingClientRect();
+            let x = (e.type === 'mousemove' ? e.clientX : e.touches[0].clientX) - rect.left;
+            const halfWidth = catcher.offsetWidth / 2;
+            if (x >= halfWidth && x <= rect.width - halfWidth) {
+                catcher.style.left = x + 'px';
+            }
+        };
+
+        gameScreen.addEventListener('mousemove', handleMove);
+        gameScreen.addEventListener('touchmove', (e) => { e.preventDefault(); handleMove(e); }, { passive: false });
+
+        function startGame() {
+            document.querySelectorAll('.game-cup').forEach(c => c.remove());
+            score = 0;
+            scoreBoard.innerText = score;
+            isPlaying = true;
+            gameOverScreen.style.display = 'none';
+            
+            if (cupSpawnInterval) clearInterval(cupSpawnInterval);
+            
+            // Динамический спавн
+            cupSpawnInterval = setInterval(() => {
+                if (isPlaying) {
+                    // Логика количества стаканов:
+                    let count = 1;
+                    if (score >= 20) {
+                        count = 3;
+                    } else if (score >= 15) {
+                        count = 2;
+                    }
+                    
+                    // Если хочешь "и так далее" (каждые 10 очков после 20 еще +1 стакан):
+                    if (score > 30) count = Math.floor(score / 10);
+
+                    for (let i = 0; i < count; i++) {
+                        // Небольшая задержка между стаканами в одной пачке, чтобы не летели в одну точку
+                        setTimeout(() => {
+                            if (isPlaying) createCup();
+                        }, i * 300); 
+                    }
+                }
+            }, 1000); // Интервал появления новых пачек
+        }
+
+        function createCup() {
+            const cup = document.createElement('div');
+            cup.className = 'game-cup';
+            const startX = Math.random() * (gameScreen.offsetWidth - 70) + 35;
+            cup.style.left = startX + 'px';
+            cup.style.top = '-90px';
+            gameScreen.appendChild(cup);
+
+            let posY = -90;
+            
+            // ПРОГРЕССИЯ СКОРОСТИ:
+            // 3 — начальная (не слишком быстро, не слишком медленно)
+            // score * 0.15 — плавный прирост
+            let currentSpeed = 3 + (score * 0.15); 
+            if (currentSpeed > 12) currentSpeed = 12; // Ограничение макс. скорости, чтобы реально было поймать
+
+            function fall() {
+                if (!isPlaying) { cup.remove(); return; }
+                posY += currentSpeed;
+                cup.style.top = posY + 'px';
+
+                const cupRect = cup.getBoundingClientRect();
+                const catcherRect = catcher.getBoundingClientRect();
+
+                if (
+                    cupRect.bottom >= catcherRect.top &&
+                    cupRect.right >= catcherRect.left &&
+                    cupRect.left <= catcherRect.right &&
+                    cupRect.top <= (catcherRect.top + 50) // Хитбокс верхней части ловца
+                ) {
+                    score++;
+                    scoreBoard.innerText = score;
+                    cup.remove();
+                    return;
+                }
+
+                if (posY > gameScreen.offsetHeight) {
+                    endGame();
+                    cup.remove();
+                } else {
+                    requestAnimationFrame(fall);
+                }
+            }
+            requestAnimationFrame(fall);
+        }
+
+        function endGame() {
+            isPlaying = false;
+            clearInterval(cupSpawnInterval);
+            finalScoreLabel.innerText = score;
+            gameOverScreen.style.display = 'flex';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            createFallingCups();
+            startGame();
+        });
+    </script>
+</body>
+</html>
